@@ -6,7 +6,7 @@ using FiniteStateMachine;
 
 public class EnermyPatrol : MonoBehaviour
 {
-    public enum EnermyState { patroling, waiting, stopped };
+    public enum EnermyState { patroling, waiting, hunting };
     public EnermyState chaseState;
 
     private NavMeshAgent agent;
@@ -21,15 +21,21 @@ public class EnermyPatrol : MonoBehaviour
     public float timerMax = 5;
     public float timer;
     public StateMachine StateMachine { get; private set; }
-
+    public Vector3 transformPlayer;
     public GameObject player;
+
+    public float angle;
+
+    private int leniancy = 0;
+
+    public float speed;
+
     // were i end
 
     // Start is called before the first frame update
     private void Awake()
     {
 
-        StateMachine = new StateMachine(new Patroling(this));
 
         chaseState = EnermyState.patroling;
         if (!TryGetComponent<NavMeshAgent>(out agent))
@@ -37,10 +43,11 @@ public class EnermyPatrol : MonoBehaviour
             Debug.LogError("you didnt attach a mesh agent");
             gameObject.SetActive(false);
         }
+
     }
     void Start()
     {
-        StateMachine.SetState(new Patroling(this));
+
         currWayPoint = 0;
         agent.isStopped = false;
         agent.SetDestination(wayPoints[currWayPoint].position);
@@ -49,18 +56,25 @@ public class EnermyPatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckPlayer();
+        transformPlayer = player.transform.position - transform.position;
+        
 
         if (chaseState == EnermyState.patroling)
         {
             CheckArrival();
-            
+            angle = Vector3.Angle(transformPlayer, transform.forward);
+            CheckPlayer(transformPlayer);
+        }
+        else if (chaseState == EnermyState.hunting)
+        {
+            agent.speed = 10f;
+            angle = Vector3.Angle(transformPlayer, transform.forward);
+            CheckPlayer(transformPlayer);
         }
 
     }
     private void CheckArrival()
     {
-        
 
         timer += Time.deltaTime;
 
@@ -68,7 +82,6 @@ public class EnermyPatrol : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, wayPoints[currWayPoint].position) < agent.stoppingDistance)
             {
-                
                 if (currWayPoint < wayPoints.Count - 1)
                 {
                     currWayPoint++;
@@ -83,81 +96,59 @@ public class EnermyPatrol : MonoBehaviour
             else
             {
                 timer = 0;
+
             }
         }
 
         
+
+        
     }
-    private void CheckPlayer()
+    private void CheckPlayer(Vector3 tPlayer)
     {
         RaycastHit hit;
-        playerDirection = player.transform.position - transform.position;
-        playerDirection = playerDirection.normalized;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(playerDirection), out hit, Mathf.Infinity))
+
+
+        if (angle <= 60)
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(playerDirection) * hit.distance, Color.yellow);
-            Debug.Log("Did Hit");
+            if (Physics.Raycast(transform.position, tPlayer, out hit, Mathf.Infinity))
+            {
+                Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.yellow);
+                if (hit.collider.tag == "Player")
+                {
+                    Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.red);
+                    if (chaseState != EnermyState.hunting)
+                    {
+                        chaseState = EnermyState.hunting;
+                    }
+                    else
+                    {
+                        agent.SetDestination(player.transform.position);
+                    }
+                    
+                }
+                else if (chaseState != EnermyState.patroling)
+                {
+                    leniancy++;
+                    agent.SetDestination(player.transform.position);
+
+                    if (leniancy >= 100)
+                    {
+                        agent.SetDestination(wayPoints[currWayPoint].position);
+                        chaseState = EnermyState.patroling;
+                        leniancy = 100;
+                    }
+                    
+                }
+
+            }
         }
+        
         
     }
     private void GoToIdle()
     {
 
     }
-    public enum EnermyID { patrol = 0, wait = 1, chase = 2 }
-    public abstract class EnermyAttackState : IState
-    {
-        public EnermyID ID { get; protected set; }
-        public EnermyAttackState(EnermyPatrol _instance)
-        {
-            instance = _instance;
-        }
-        protected EnermyPatrol instance;
-        public virtual void OnEnter()
-        {
-
-        }
-        public virtual void OnExit()
-        {
-
-        }
-        public virtual void OnUpdate()
-        {
-
-        }
-    }
-    public class Patroling : EnermyAttackState
-    {
-        private NavMeshAgent agent;
-        // list of waypoints to drive between
-        [SerializeField] List<Transform> wayPoints = new List<Transform>();
-
-        public GameObject enermy;
-        private int currWayPoint;
-
-        // were i start
-
-        public StateMachine StateMachine { get; private set; }
-
-        public GameObject player;
-        public Patroling(EnermyPatrol _instance) : base(_instance)
-        {
-            ID = EnermyID.patrol;
-        }
-
-        public override void OnEnter()
-        {
-            Debug.Log("eatin");
-        }
-        public override void OnUpdate()
-        {
-            
-        }
-        public override void OnExit()
-        {
-            
-        }
-    }
-    //[System.Serializable]
-
+   
 }

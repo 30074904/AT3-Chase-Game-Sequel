@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class movement : MonoBehaviour
 {
-    int speed = 7;
-    int sprint = 10;
-    int specrouch = 4;
+    public int speed = 7;
+    public int sprint = 10;
+    public int specrouch = 4;
     public float gravity = -0f;
     public float jumph = 100;
     bool crouched = false;
@@ -37,7 +37,7 @@ public class movement : MonoBehaviour
 
         if (Input.GetKey("left ctrl"))
         {
-            C_c.height = 1f;
+            C_c.height = 0.5f;
             Vector3 scale = transform.localScale;
             scale.y = 1F; // your new value
             transform.localScale = scale;
