@@ -18,6 +18,8 @@ public class movement : MonoBehaviour
     public bool grounded = false;
 
     public UnityEngine.CharacterController C_c;
+
+    RaycastHit hit;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,11 +39,19 @@ public class movement : MonoBehaviour
 
         if (Input.GetKey("left ctrl"))
         {
-            C_c.height = 0.5f;
-            Vector3 scale = transform.localScale;
-            scale.y = 1F; // your new value
-            transform.localScale = scale;
-            crouched = true;
+            if (Physics.Raycast(transform.position, Vector3.up, out hit, 10f))
+            {
+                Debug.Log("cant do that.");
+            }
+            else
+            {
+                C_c.height = 0.5f;
+                Vector3 scale = transform.localScale;
+                scale.y = 1F; // your new value
+                transform.localScale = scale;
+                crouched = true;
+            }
+            
 
         }
         else

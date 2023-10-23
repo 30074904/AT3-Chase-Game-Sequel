@@ -26,5 +26,7 @@ public class EventManager : MonoBehaviour
     public delegate void UpdateColor(Color color, int direction);
     public static UpdateColor updateButtonColorEvent;
 
+    public delegate void UpdateAnimation(int currAnim);
+    public static UpdateAnimation updateAnimationEvent;
 
 }

@@ -26,9 +26,11 @@ public class EnermyPatrol : MonoBehaviour
 
     public float angle;
 
-    private int leniancy = 0;
+    public int leniancy = 0;
 
     public float speed;
+
+    bool arrive = false;
 
     // were i end
 
@@ -38,6 +40,7 @@ public class EnermyPatrol : MonoBehaviour
 
 
         chaseState = EnermyState.patroling;
+
         if (!TryGetComponent<NavMeshAgent>(out agent))
         {
             Debug.LogError("you didnt attach a mesh agent");
@@ -58,30 +61,56 @@ public class EnermyPatrol : MonoBehaviour
     {
         transformPlayer = player.transform.position - transform.position;
         
+        if (Input.GetKey(KeyCode.Q))
+        {
+            agent.SetDestination(transform.position);
+        }
+        else
+        {
+            if (chaseState == EnermyState.patroling)
+            {
+                EventManager.updateAnimationEvent(1);
+                CheckArrival(false);
+                angle = Vector3.Angle(transformPlayer, transform.forward);
+                CheckPlayer(transformPlayer);
+            }
+            else if (chaseState == EnermyState.hunting)
+            {
+                EventManager.updateAnimationEvent(2);
+                agent.speed = 10f;
+                angle = Vector3.Angle(transformPlayer, transform.forward);
+                HuntPlayer(transformPlayer);
+            }
+            else if (chaseState == EnermyState.waiting)
+            {
+                EventManager.updateAnimationEvent(0);
+                angle = Vector3.Angle(transformPlayer, transform.forward);
+                GoToIdle(transformPlayer);
+            }
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            agent.SetDestination(wayPoints[currWayPoint].position);
+        }
 
-        if (chaseState == EnermyState.patroling)
-        {
-            CheckArrival();
-            angle = Vector3.Angle(transformPlayer, transform.forward);
-            CheckPlayer(transformPlayer);
-        }
-        else if (chaseState == EnermyState.hunting)
-        {
-            agent.speed = 10f;
-            angle = Vector3.Angle(transformPlayer, transform.forward);
-            CheckPlayer(transformPlayer);
-        }
 
     }
-    private void CheckArrival()
+    private void CheckArrival(bool doneWaiting)
     {
-
-        timer += Time.deltaTime;
-
-        if (timer > timerMax)
+        if (Vector3.Distance(transform.position, wayPoints[currWayPoint].position) < agent.stoppingDistance)
         {
-            if (Vector3.Distance(transform.position, wayPoints[currWayPoint].position) < agent.stoppingDistance)
+            Debug.Log("have arrivived?");
+            timer = 0;
+            if (doneWaiting == false)
             {
+                chaseState = EnermyState.waiting;
+                EventManager.updateAnimationEvent(0);
+            }
+
+            if (doneWaiting == true)
+            {
+                doneWaiting = false;
+                
                 if (currWayPoint < wayPoints.Count - 1)
                 {
                     currWayPoint++;
@@ -93,29 +122,50 @@ public class EnermyPatrol : MonoBehaviour
                     agent.SetDestination(wayPoints[currWayPoint].position);
                 }
             }
-            else
-            {
-                timer = 0;
-
-            }
         }
-
-        
-
-        
+        else
+        {
+        }
     }
     private void CheckPlayer(Vector3 tPlayer)
     {
         RaycastHit hit;
 
 
-        if (angle <= 60)
+        if (angle <= 80)
         {
             if (Physics.Raycast(transform.position, tPlayer, out hit, Mathf.Infinity))
             {
                 Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.yellow);
                 if (hit.collider.tag == "Player")
                 {
+                    Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.red);
+                    chaseState = EnermyState.hunting;
+                    agent.SetDestination(player.transform.position);
+                }
+
+
+            }
+        }
+        
+        
+    }
+    private void HuntPlayer(Vector3 tPlayer)
+    {
+        RaycastHit hit;
+
+        if (leniancy > 0)
+        {
+            leniancy--;
+        }
+        if (angle <= 80)
+        {
+            if (Physics.Raycast(transform.position, tPlayer, out hit, Mathf.Infinity))
+            {
+                Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.yellow);
+                if (hit.collider.tag == "Player")
+                {
+                    leniancy = 50;
                     Debug.DrawRay(transform.position, tPlayer * hit.distance, Color.red);
                     if (chaseState != EnermyState.hunting)
                     {
@@ -125,30 +175,68 @@ public class EnermyPatrol : MonoBehaviour
                     {
                         agent.SetDestination(player.transform.position);
                     }
-                    
                 }
-                else if (chaseState != EnermyState.patroling)
+                else if (chaseState == EnermyState.hunting && leniancy > 0)
                 {
-                    leniancy++;
                     agent.SetDestination(player.transform.position);
-
-                    if (leniancy >= 100)
-                    {
-                        agent.SetDestination(wayPoints[currWayPoint].position);
-                        chaseState = EnermyState.patroling;
-                        leniancy = 100;
-                    }
-                    
+                }
+                else
+                {
+                    agent.speed = 3.5f;
+                    chaseState = EnermyState.patroling;
+                    agent.SetDestination(wayPoints[currWayPoint].position);
                 }
 
             }
         }
-        
-        
     }
-    private void GoToIdle()
+    private void GoToIdle(Vector3 tPlayer)
     {
+        EventManager.updateAnimationEvent(0);
+
+        timer += Time.deltaTime;
+
+        RaycastHit contact;
+
+        if (angle <= 180)
+        {
+            if (Physics.Raycast(transform.position, tPlayer, out contact, Mathf.Infinity))
+            {
+                Debug.DrawRay(transform.position, tPlayer * contact.distance, Color.yellow);
+                if (contact.collider.tag == "Player")
+                {
+                    Debug.DrawRay(transform.position, tPlayer * contact.distance, Color.red);
+                    if (chaseState != EnermyState.hunting)
+                    {
+                        chaseState = EnermyState.hunting;
+                        agent.SetDestination(player.transform.position);
+                    }
+
+                }
+                else if (timer > timerMax)
+                {
+                    chaseState = EnermyState.patroling;
+                    CheckArrival(true);
+                    timer = 0;
+                }
+            }
+            
+        }
+        else if (timer > timerMax)
+        {
+            chaseState = EnermyState.patroling;
+            CheckArrival(true);
+            timer = 0;
+        }
 
     }
-   
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Player")
+        {
+            Debug.Log("you lose");
+        }
+    }
+
 }
