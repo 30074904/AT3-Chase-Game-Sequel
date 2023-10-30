@@ -29,4 +29,7 @@ public class EventManager : MonoBehaviour
     public delegate void UpdateAnimation(int currAnim);
     public static UpdateAnimation updateAnimationEvent;
 
+    public delegate void CharacterInteract(int currObject);
+    public static CharacterInteract charaterInteractEvent;
+
 }

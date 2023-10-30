@@ -6,7 +6,7 @@ using FiniteStateMachine;
 
 public class EnermyPatrol : MonoBehaviour
 {
-    public enum EnermyState { patroling, waiting, hunting };
+    public enum EnermyState { patroling, waiting, hunting, stun };
     public EnermyState chaseState;
 
     private NavMeshAgent agent;
@@ -30,8 +30,13 @@ public class EnermyPatrol : MonoBehaviour
 
     public float speed;
 
+    public int idleAngle = 180;
+
     bool arrive = false;
 
+    public float currstun;
+
+    private float maxStun;
     // were i end
 
     // Start is called before the first frame update
@@ -87,6 +92,10 @@ public class EnermyPatrol : MonoBehaviour
                 angle = Vector3.Angle(transformPlayer, transform.forward);
                 GoToIdle(transformPlayer);
             }
+            else if (chaseState == EnermyState.stun)
+            {
+                GoStun(maxStun);
+            }
         }
         if (Input.GetKey(KeyCode.E))
         {
@@ -97,6 +106,7 @@ public class EnermyPatrol : MonoBehaviour
     }
     private void CheckArrival(bool doneWaiting)
     {
+        agent.speed = 3.5f;
         if (Vector3.Distance(transform.position, wayPoints[currWayPoint].position) < agent.stoppingDistance)
         {
             Debug.Log("have arrivived?");
@@ -198,7 +208,7 @@ public class EnermyPatrol : MonoBehaviour
 
         RaycastHit contact;
 
-        if (angle <= 180)
+        if (angle <= idleAngle)
         {
             if (Physics.Raycast(transform.position, tPlayer, out contact, Mathf.Infinity))
             {
@@ -227,6 +237,28 @@ public class EnermyPatrol : MonoBehaviour
             chaseState = EnermyState.patroling;
             CheckArrival(true);
             timer = 0;
+        }
+
+    }
+
+    public void GoStun(float stunTime)
+    {
+
+        agent.SetDestination(transform.position);
+
+        chaseState = EnermyState.stun;
+        Debug.Log("hit Enermy");
+
+        maxStun = stunTime;
+
+        currstun += Time.deltaTime;
+
+        if (currstun >= maxStun)
+        {
+            agent.SetDestination(wayPoints[currWayPoint].position);
+            chaseState = EnermyState.patroling;
+            currstun = 0f;
+
         }
 
     }

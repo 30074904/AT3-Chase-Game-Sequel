@@ -2251,7 +2251,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 647842f6307e3da429fcd2cd98d6e32e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.03
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 647842f6307e3da429fcd2cd98d6e32e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3659,6 +3659,7 @@ MonoBehaviour:
   angle: 0
   leniancy: 0
   speed: 15
+  idleAngle: 135
 --- !u!33 &1799666626
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4223,6 +4224,7 @@ GameObject:
   - component: {fileID: 2023711616}
   - component: {fileID: 2023711617}
   - component: {fileID: 2023711615}
+  - component: {fileID: 2023711618}
   - component: {fileID: 2023711614}
   m_Layer: 0
   m_Name: Main Camera
@@ -4311,6 +4313,20 @@ MonoBehaviour:
   sensitivity: 1
   drag: 1
   verticalClamp: {x: -45, y: 70}
+--- !u!114 &2023711618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023711613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a84eca846a411c544b6fd2ccb4c8f77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tCamera: {fileID: 0}
+  interactionDistance: 0
 --- !u!1 &2023959949
 GameObject:
   m_ObjectHideFlags: 0
