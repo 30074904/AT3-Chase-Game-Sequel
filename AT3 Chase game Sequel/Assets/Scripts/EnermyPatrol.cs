@@ -74,14 +74,14 @@ public class EnermyPatrol : MonoBehaviour
         {
             if (chaseState == EnermyState.patroling)
             {
-                EventManager.updateAnimationEvent(1);
+                EventManager.updateAnimationEvent(2);
                 CheckArrival(false);
                 angle = Vector3.Angle(transformPlayer, transform.forward);
                 CheckPlayer(transformPlayer);
             }
             else if (chaseState == EnermyState.hunting)
             {
-                EventManager.updateAnimationEvent(2);
+                EventManager.updateAnimationEvent(4);
                 agent.speed = 10f;
                 angle = Vector3.Angle(transformPlayer, transform.forward);
                 HuntPlayer(transformPlayer);
@@ -243,7 +243,7 @@ public class EnermyPatrol : MonoBehaviour
 
     public void GoStun(float stunTime)
     {
-
+        EventManager.updateAnimationEvent(3);
         agent.SetDestination(transform.position);
 
         chaseState = EnermyState.stun;

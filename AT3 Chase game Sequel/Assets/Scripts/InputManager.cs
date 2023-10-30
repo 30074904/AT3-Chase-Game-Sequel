@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             DoInteraction();
+            EventManager.updateAnimationHandsEvent();
         }
         
     }

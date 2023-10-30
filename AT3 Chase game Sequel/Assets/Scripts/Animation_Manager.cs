@@ -11,6 +11,7 @@ public class Animation_Manager : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         EventManager.updateAnimationEvent += ChangeAnimation;
+        EventManager.updateAnimationHandsEvent += ChangeAnimationHands;
     }
 
     // Update is called once per frame
@@ -21,5 +22,9 @@ public class Animation_Manager : MonoBehaviour
     private void ChangeAnimation(int currAnim)
     {
         anim.SetInteger("CurrAnim", currAnim);
+    }
+    private void ChangeAnimationHands()
+    {
+        anim.SetTrigger("Push");
     }
 }
