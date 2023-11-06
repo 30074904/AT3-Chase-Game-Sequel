@@ -6,7 +6,7 @@ using FiniteStateMachine;
 
 public class EnermyPatrol : MonoBehaviour
 {
-    public enum EnermyState { patroling, waiting, hunting, stun };
+    public enum EnermyState { patroling, waiting, hunting, stun, hunt };
     public EnermyState chaseState;
 
     private NavMeshAgent agent;
@@ -37,6 +37,10 @@ public class EnermyPatrol : MonoBehaviour
     public float currstun;
 
     private float maxStun;
+
+    private bool firstIdle;
+
+    private bool keyStolen;
     // were i end
 
     // Start is called before the first frame update
@@ -59,6 +63,7 @@ public class EnermyPatrol : MonoBehaviour
         currWayPoint = 0;
         agent.isStopped = false;
         agent.SetDestination(wayPoints[currWayPoint].position);
+        EventManager.ArtifactStolenEvent += KeyStolen;
     }
 
     // Update is called once per frame
@@ -72,7 +77,16 @@ public class EnermyPatrol : MonoBehaviour
         }
         else
         {
-            if (chaseState == EnermyState.patroling)
+            if (keyStolen == true)
+            {
+                angle = Vector3.Angle(transformPlayer, transform.forward);
+                agent.SetDestination(player.transform.position);
+                EventManager.updateAnimationEvent(4);
+                agent.speed = 10f;
+                
+                chaseState = EnermyState.hunt;
+            }
+            else if (chaseState == EnermyState.patroling)
             {
                 EventManager.updateAnimationEvent(2);
                 CheckArrival(false);
@@ -202,6 +216,14 @@ public class EnermyPatrol : MonoBehaviour
     }
     private void GoToIdle(Vector3 tPlayer)
     {
+        
+
+        if (firstIdle == true)
+        {
+            firstIdle = false;
+            timerMax = Random.Range(3, 10);
+        }
+
         EventManager.updateAnimationEvent(0);
 
         timer += Time.deltaTime;
@@ -227,6 +249,7 @@ public class EnermyPatrol : MonoBehaviour
                 {
                     chaseState = EnermyState.patroling;
                     CheckArrival(true);
+                    firstIdle = true;
                     timer = 0;
                 }
             }
@@ -236,6 +259,7 @@ public class EnermyPatrol : MonoBehaviour
         {
             chaseState = EnermyState.patroling;
             CheckArrival(true);
+            firstIdle = true;
             timer = 0;
         }
 
@@ -262,6 +286,15 @@ public class EnermyPatrol : MonoBehaviour
         }
 
     }
+    private void KeyStolen(bool stolen)
+    {
+        
+        if (stolen == true)
+        {
+            Debug.Log("???");
+            keyStolen = true;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -270,5 +303,6 @@ public class EnermyPatrol : MonoBehaviour
             Debug.Log("you lose");
         }
     }
+    
 
 }

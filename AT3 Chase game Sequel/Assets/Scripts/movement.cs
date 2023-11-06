@@ -15,6 +15,7 @@ public class movement : MonoBehaviour
 
     float x_move = 0f;
     float z_move = 0f;
+    Vector3 dir = Vector3.zero;
     public bool grounded = false;
 
     public UnityEngine.CharacterController C_c;
@@ -56,30 +57,40 @@ public class movement : MonoBehaviour
         }
         else
         {
-            C_c.height = 2f;
-            Vector3 scale = transform.localScale;
-            scale.y = 1.2F; // your new value
-            transform.localScale = scale;
-            crouched = false;
+            if (Physics.Raycast(transform.position, Vector3.up, out hit, 10f))
+            {
+                Debug.Log("cant do that.");
+            }
+            else
+            {
+                C_c.height = 2f;
+                Vector3 scale = transform.localScale;
+                scale.y = 1.2F; // your new value
+                transform.localScale = scale;
+                crouched = false;
+            }
+            
         }
-        if (Input.GetKey("left shift"))
-        {
-            x_move = Input.GetAxis("Horizontal") * sprint * Time.deltaTime;
-            z_move = Input.GetAxis("Vertical") * sprint * Time.deltaTime;
 
+        // dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        dir = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
+        dir = dir.normalized;
+
+        if (crouched == true)
+        {
+            /*x_move = Input.GetAxis("Horizontal") * specrouch * Time.deltaTime;
+            z_move = Input.GetAxis("Vertical") * specrouch * Time.deltaTime;*/
+            C_c.Move(dir * specrouch * Time.deltaTime);
         }
         else
         {
-            x_move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-            z_move = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+            /*x_move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+            z_move = Input.GetAxis("Vertical") * speed * Time.deltaTime;*/
+            C_c.Move(dir * speed * Time.deltaTime);
         }
-        if (crouched == true)
-        {
-            x_move = Input.GetAxis("Horizontal") * specrouch * Time.deltaTime;
-            z_move = Input.GetAxis("Vertical") * specrouch * Time.deltaTime;
-        }
-        C_c.Move(transform.forward * z_move);
+        /*C_c.Move(transform.forward * z_move);
         C_c.Move(transform.right * x_move);
+        C_c.velocity*/
         //checks if grounded and if no applys gravity
         if (grounded == true)
         {

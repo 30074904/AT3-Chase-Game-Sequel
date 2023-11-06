@@ -35,4 +35,10 @@ public class EventManager : MonoBehaviour
     public delegate void CharacterInteract(int currObject);
     public static CharacterInteract charaterInteractEvent;
 
+    public delegate void ArtifactStolen(bool stolen);
+    public static ArtifactStolen ArtifactStolenEvent;
+
+    public delegate void Garrage();
+    public static Garrage GarrageEvent;
+
 }

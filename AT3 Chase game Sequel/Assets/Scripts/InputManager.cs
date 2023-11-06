@@ -8,21 +8,26 @@ public class InputManager : MonoBehaviour
 
     public Transform tCamera;
 
-    public int interactionDistance;
+    public int interactionDistance = 20;
 
     private float stunTme = 4;
+
+    private bool keyStolen;
     //Variables End
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        EventManager.ArtifactStolenEvent += KeyStolen;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
+
         if (Input.GetButtonDown("Fire1"))
         {
             DoInteraction();
@@ -44,6 +49,23 @@ public class InputManager : MonoBehaviour
                 interaction.GoStun(stunTme);
                 stunTme = stunTme - 1;
             }
+            if (hit.collider.tag == "door")
+            {
+                if (keyStolen == true)
+                {
+                    EventManager.GarrageEvent();
+                }
+                
+            }
+        }
+    }
+    private void KeyStolen(bool stolen)
+    {
+
+        if (stolen == true)
+        {
+            Debug.Log("???");
+            keyStolen = true;
         }
     }
 }
