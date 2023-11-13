@@ -24,7 +24,16 @@ public class Animation_Manager : MonoBehaviour
     }
     private void ChangeAnimation(int animNum)
     {
-        anim.SetInteger("CurrAnim", animNum);
+        foreach (AnimatorControllerParameter param in anim.parameters)
+        {
+            if (param.name == "CurrAnim")
+            {
+                anim.SetInteger("CurrAnim", animNum);
+            }
+            
+        }
+            
+        
     }
     private void ChangeAnimationHands()
     {

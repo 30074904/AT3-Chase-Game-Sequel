@@ -72,25 +72,17 @@ public class movement : MonoBehaviour
             
         }
 
-        // dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         dir = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
         dir = dir.normalized;
 
         if (crouched == true)
         {
-            /*x_move = Input.GetAxis("Horizontal") * specrouch * Time.deltaTime;
-            z_move = Input.GetAxis("Vertical") * specrouch * Time.deltaTime;*/
             C_c.Move(dir * specrouch * Time.deltaTime);
         }
         else
         {
-            /*x_move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-            z_move = Input.GetAxis("Vertical") * speed * Time.deltaTime;*/
             C_c.Move(dir * speed * Time.deltaTime);
         }
-        /*C_c.Move(transform.forward * z_move);
-        C_c.Move(transform.right * x_move);
-        C_c.velocity*/
         //checks if grounded and if no applys gravity
         if (grounded == true)
         {
@@ -104,7 +96,6 @@ public class movement : MonoBehaviour
         //Jumps when space is pressed
         if (Input.GetKey("space") && (grounded == true))
         {
-            Debug.Log("Jump");
             gravity = 7;
 
         }

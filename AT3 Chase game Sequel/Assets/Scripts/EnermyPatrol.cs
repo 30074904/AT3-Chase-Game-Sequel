@@ -77,12 +77,12 @@ public class EnermyPatrol : MonoBehaviour
         }
         else
         {
-            if (keyStolen == true)
+            if (keyStolen == true && chaseState != EnermyState.stun)
             {
                 angle = Vector3.Angle(transformPlayer, transform.forward);
                 agent.SetDestination(player.transform.position);
                 EventManager.updateAnimationEvent(4);
-                agent.speed = 10f;
+                agent.speed = 8f;
                 
                 chaseState = EnermyState.hunt;
             }
@@ -96,7 +96,7 @@ public class EnermyPatrol : MonoBehaviour
             else if (chaseState == EnermyState.hunting)
             {
                 EventManager.updateAnimationEvent(4);
-                agent.speed = 10f;
+                agent.speed = 8f;
                 angle = Vector3.Angle(transformPlayer, transform.forward);
                 HuntPlayer(transformPlayer);
             }
@@ -296,13 +296,7 @@ public class EnermyPatrol : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag == "Player")
-        {
-            Debug.Log("you lose");
-        }
-    }
+    
     
 
 }

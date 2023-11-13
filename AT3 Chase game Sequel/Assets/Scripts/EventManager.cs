@@ -41,4 +41,13 @@ public class EventManager : MonoBehaviour
     public delegate void Garrage();
     public static Garrage GarrageEvent;
 
+    public delegate void ChangeLevel(int currLevel);
+    public static ChangeLevel ChangeLevelEvent;
+
+    public delegate void CurrentMenu(GameObject uisystem);
+    public static CurrentMenu updateCurrentMenu;
+
+    public delegate void CurrentDirrections(GameObject up, GameObject down, GameObject left, GameObject right);
+    public static CurrentDirrections updateCurrentDirections;
+
 }

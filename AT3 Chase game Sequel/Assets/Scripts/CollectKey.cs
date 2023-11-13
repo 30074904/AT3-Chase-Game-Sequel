@@ -10,7 +10,7 @@ public class CollectKey : MonoBehaviour
     public GameObject warning;
 
     private bool warningNow = false;
-
+    private bool keyGot = false;
     public float timerMax = 5;
     public float timer;
     //My variables end here
@@ -27,11 +27,15 @@ public class CollectKey : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("got Key");
-        EventManager.ArtifactStolenEvent(true);
-        key.SetActive(false);
-        warningNow = true;
-        warning.SetActive(true);
+        if (keyGot == false)
+        {
+            keyGot = true;
+            EventManager.ArtifactStolenEvent(true);
+            key.SetActive(false);
+            warningNow = true;
+            warning.SetActive(true);
+        }
+        
     }
     private void DoWarning()
     {

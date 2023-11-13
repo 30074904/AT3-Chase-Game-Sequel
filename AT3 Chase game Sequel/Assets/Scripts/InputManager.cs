@@ -6,7 +6,6 @@ public class InputManager : MonoBehaviour
 {
     //Variables
 
-    public Transform tCamera;
 
     public int interactionDistance = 20;
 
