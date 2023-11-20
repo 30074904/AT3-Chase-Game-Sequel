@@ -7,7 +7,8 @@ public class InputManager : MonoBehaviour
     //Variables
 
 
-    public int interactionDistance = 20;
+
+    public int interactionDistance = 5;
 
     private float stunTme = 4;
 
@@ -19,6 +20,7 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         EventManager.ArtifactStolenEvent += KeyStolen;
+        EventManager.DoAttackEvent += DoInteraction;
     }
 
     // Update is called once per frame
@@ -37,18 +39,25 @@ public class InputManager : MonoBehaviour
     private void DoInteraction()
     {
         RaycastHit hit;
-
+        EnermyPatrol interaction;
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance))
         {
             Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
 
-            if (hit.collider.TryGetComponent<EnermyPatrol>(out EnermyPatrol interaction))
+            if (hit.collider.tag == "knight")
             {
-                interaction.GoStun(stunTme);
-                stunTme = stunTme - 1;
+                interaction = hit.collider.GetComponentInParent<EnermyPatrol>();
+                Debug.Log("hit Enermy");
+                if (interaction.chaseState != EnermyPatrol.EnermyState.stun)
+                {
+                    
+                    interaction.GoStun(stunTme);
+                    stunTme = stunTme - 1;
+                }
+                
             }
-            if (hit.collider.tag == "door")
+            else if (hit.collider.tag == "door")
             {
                 if (keyStolen == true)
                 {

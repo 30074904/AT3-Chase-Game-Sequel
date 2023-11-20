@@ -49,6 +49,12 @@ public class MouseLook : MonoBehaviour
         ToggleMouseLook(true, true);
 
     }
+    private void OnDestroy()
+    {
+        Cursor.visible = true;
+        mouseLookEnabled = false;
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     // Update is called once per frame
     private void Update()

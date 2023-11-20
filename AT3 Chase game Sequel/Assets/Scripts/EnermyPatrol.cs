@@ -47,8 +47,9 @@ public class EnermyPatrol : MonoBehaviour
     private void Awake()
     {
 
+        
+            
 
-        chaseState = EnermyState.patroling;
 
         if (!TryGetComponent<NavMeshAgent>(out agent))
         {
@@ -59,11 +60,15 @@ public class EnermyPatrol : MonoBehaviour
     }
     void Start()
     {
-
+        keyStolen = false;
         currWayPoint = 0;
         agent.isStopped = false;
-        agent.SetDestination(wayPoints[currWayPoint].position);
+        firstIdle = true;
         EventManager.ArtifactStolenEvent += KeyStolen;
+        agent.speed = 3.5f;
+        chaseState = EnermyState.patroling;
+        agent.SetDestination(wayPoints[currWayPoint].position);
+
     }
 
     // Update is called once per frame

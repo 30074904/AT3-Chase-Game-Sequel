@@ -32,6 +32,9 @@ public class EventManager : MonoBehaviour
     public delegate void UpdateAnimationHands();
     public static UpdateAnimationHands updateAnimationHandsEvent;
 
+    public delegate void DoAttack();
+    public static DoAttack DoAttackEvent;
+
     public delegate void CharacterInteract(int currObject);
     public static CharacterInteract charaterInteractEvent;
 

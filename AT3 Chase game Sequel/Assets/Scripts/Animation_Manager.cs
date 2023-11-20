@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Animation_Manager : MonoBehaviour
 {
     public Animator anim;
@@ -38,9 +39,18 @@ public class Animation_Manager : MonoBehaviour
     private void ChangeAnimationHands()
     {
         anim.SetTrigger("Push");
+        
     }
     private void garrageOpen()
     {
         anim.SetTrigger("Open");
+    }
+    private void DoInteraction()
+    {
+        EventManager.DoAttackEvent();
+    }
+    private void Win()
+    {
+        EventManager.ChangeLevelEvent(3);
     }
 }

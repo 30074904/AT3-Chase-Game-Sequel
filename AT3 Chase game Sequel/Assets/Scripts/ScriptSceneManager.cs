@@ -19,18 +19,22 @@ public class ScriptSceneManager : MonoBehaviour
     {
         if (currLevel == 1)
         {
+            //start menu
             SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
         else if (currLevel == 2)
         {
+            //game scene
             SceneManager.LoadScene(1, LoadSceneMode.Single);
         }
         else if ( currLevel == 3)
         {
+            //win
             SceneManager.LoadScene(2, LoadSceneMode.Single);
         }
         else if (currLevel == 4)
         {
+            //lose
             Debug.Log("?");
             SceneManager.LoadScene(3, LoadSceneMode.Single);
             

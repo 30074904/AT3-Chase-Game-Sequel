@@ -7,7 +7,7 @@ public class KnightHurt : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -15,20 +15,13 @@ public class KnightHurt : MonoBehaviour
     {
         
     }
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        if (collision.collider.tag == "Player")
+        Debug.Log("Entered a hitbox");
+        if (collision.tag == "Player")
         {
             Debug.Log("you lose");
             EventManager.ChangeLevelEvent(4);
         }
-    }
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.collider.tag == "Player")
-        {
-            EventManager.ChangeLevelEvent(4);
-        }
-        
     }
 }

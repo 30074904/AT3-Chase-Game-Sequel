@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class MenuNav : MonoBehaviour
 {
     //Variables start here
@@ -17,6 +17,16 @@ public class MenuNav : MonoBehaviour
     public GameObject down;
     public GameObject left;
     public GameObject right;
+
+    public bool going = false;
+
+    //Start of the interactable gameobjects
+
+    public GameObject GStart;
+    public GameObject GQuit;
+    public GameObject GBack;
+
+    //End of the interactable gameobjects
 
     //Variables end here
     // Start is called before the first frame update
@@ -34,57 +44,42 @@ public class MenuNav : MonoBehaviour
 
         EventManager.updateCurrentMenu(currSelect);
 
+        CheckInteractable();
     }
     private void DetectInputs()
     {
-        float y_Axis = Input.GetAxis("Vertical") / 10 * Time.deltaTime;
-        float x_Axis = Input.GetAxis("Horizontal") / 10 * Time.deltaTime;
+        float y_Axis = Input.GetAxisRaw("Vertical");
+        float x_Axis = Input.GetAxisRaw("Horizontal");
 
-        Y_Axis = y_Axis;
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (y_Axis == 0f && x_Axis == 0f)
         {
-            y_Axis = 0f;
-            Debug.Log("more y");
-            if (up != null)
-            {
-                currSelect = up;
-                
-            }
-            
+            going = false;
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        
+        if (y_Axis > 0 && going != true)
         {
-            y_Axis = 0f;
-            Debug.Log("less y");
-            if (down != null)
-            {
-                currSelect = down;
-                
-            }
-            
+            going = true;
+            currSelect = up;
+
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        else if (y_Axis < 0 && going != true)
         {
-            x_Axis = 0f;
-            Debug.Log("more x");
-            if (left != null)
-            {
-                currSelect = left;
-                
-            }
-            
+            going = true;
+            currSelect = down;
+
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        if (x_Axis < 0 && going != true)
         {
-            x_Axis = 0f;
-            Debug.Log("less x");
-            if (right != null)
-            {
-                currSelect = right;
-                
-            }
-            
+            going = true;
+            currSelect = left;
+
+        }
+        else if (x_Axis > 0 && going != true)
+        {
+            going = true;
+            currSelect = right;
+
         }
     }
     private void SetDirrection(GameObject Up, GameObject Down, GameObject Left, GameObject Right)
@@ -93,5 +88,21 @@ public class MenuNav : MonoBehaviour
         down = Down;
         left = Left;
         right = Right;
+    }
+    private void CheckInteractable()
+    {
+        if ((currSelect == GStart) && Input.GetButtonDown("Submit"))
+        {
+            Debug.Log("why it no workie");
+            EventManager.ChangeLevelEvent(2);
+        }
+        else if ((currSelect == GStart) && Input.GetButtonDown("Submit"))
+        {
+            Application.Quit();
+        }
+        else if ((currSelect == GStart) && Input.GetButtonDown("Submit"))
+        {
+            EventManager.ChangeLevelEvent(1);
+        }
     }
 }
