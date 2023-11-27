@@ -28,8 +28,8 @@ public class InputManager : MonoBehaviour
     {
         
 
-
-        if (Input.GetButtonDown("Fire1"))
+        // checking if the player is attemting to interact and calling the interaction methord, also starting the push animation.
+        if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("YButton"))
         {
             DoInteraction();
             EventManager.updateAnimationHandsEvent();
@@ -41,6 +41,7 @@ public class InputManager : MonoBehaviour
         RaycastHit hit;
         EnermyPatrol interaction;
 
+        // creating a raycast that checks if what it hits is one of the interactable objects, if so doing the thing needed such as stunning or opening a door
         if (Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance))
         {
             Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
@@ -67,12 +68,12 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+    // a methord being called when the key is stolen to tell this script that the key has been stolen
     private void KeyStolen(bool stolen)
     {
 
         if (stolen == true)
         {
-            Debug.Log("???");
             keyStolen = true;
         }
     }

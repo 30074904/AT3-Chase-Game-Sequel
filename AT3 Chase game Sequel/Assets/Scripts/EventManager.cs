@@ -19,7 +19,16 @@ public class EventManager : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+            
+    }
 
+    // start of delegate events
     public delegate void ChangeCarCount(int carCount);
     public static ChangeCarCount changeCarCountEvent;
 
@@ -50,7 +59,9 @@ public class EventManager : MonoBehaviour
     public delegate void CurrentMenu(GameObject uisystem);
     public static CurrentMenu updateCurrentMenu;
 
-    public delegate void CurrentDirrections(GameObject up, GameObject down, GameObject left, GameObject right);
+    public delegate void CurrentDirrections(GameObject up, GameObject down, GameObject left, GameObject right, GameObject destination, GameObject depart, GameObject GoingTo);
     public static CurrentDirrections updateCurrentDirections;
+
+    // end of delegate events
 
 }

@@ -528,6 +528,9 @@ MonoBehaviour:
   down: {fileID: 1740206926}
   left: {fileID: 0}
   right: {fileID: 0}
+  destination: {fileID: 0}
+  depart: {fileID: 0}
+  goingTo: {fileID: 0}
   thisG: {fileID: 0}
 --- !u!1 &665073421
 GameObject:
@@ -882,10 +885,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1084,6 +1087,9 @@ MonoBehaviour:
   down: {fileID: 225744627}
   left: {fileID: 0}
   right: {fileID: 0}
+  destination: {fileID: 0}
+  depart: {fileID: 0}
+  goingTo: {fileID: 0}
   thisG: {fileID: 0}
 --- !u!1 &1758722269
 GameObject:
@@ -1121,10 +1127,15 @@ MonoBehaviour:
   down: {fileID: 0}
   left: {fileID: 0}
   right: {fileID: 0}
+  destination: {fileID: 0}
+  depart: {fileID: 0}
+  goingTo: {fileID: 0}
   going: 0
   GStart: {fileID: 225744627}
   GQuit: {fileID: 1740206926}
+  GInfo: {fileID: 0}
   GBack: {fileID: 1740206926}
+  infoScreen: {fileID: 0}
 --- !u!4 &1758722271
 Transform:
   m_ObjectHideFlags: 0

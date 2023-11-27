@@ -16,7 +16,9 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private Vector2 verticalClamp = new Vector2(-45, 70);
 
     private Vector2 smoothing;
+    private Vector2 c_smoothing;
     private Vector2 result;
+    private Vector2 c_result;
     private Transform character;
     private bool mouseLookEnabled = false;
 
@@ -63,11 +65,27 @@ public class MouseLook : MonoBehaviour
         {
             var md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
+            var cd = new Vector2(Input.GetAxisRaw("LookHorizontal"), Input.GetAxisRaw("LookVertical"));
+
             md = Vector2.Scale(md, new Vector2(sensitivity * drag, sensitivity * drag));
+
+            cd = Vector2.Scale(cd, new Vector2(sensitivity * drag, sensitivity * drag));
             smoothing.x = Mathf.Lerp(smoothing.x, md.x, 1f / drag);
             smoothing.y = Mathf.Lerp(smoothing.y, md.y, 1f / drag);
+
+            c_smoothing.x = Mathf.Lerp(smoothing.x, cd.x, 1f / drag);
+            c_smoothing.y = Mathf.Lerp(smoothing.y, cd.y, 1f / drag);
+            
             result += smoothing;
+
+            c_result += c_smoothing;
+            
             result.y = Mathf.Clamp(result.y, verticalClamp.x, verticalClamp.y);
+
+            c_result.y = Mathf.Clamp(c_result.y, verticalClamp.x, verticalClamp.y);
+
+            transform.localRotation = Quaternion.AngleAxis(-c_result.y, Vector3.right);
+            character.localRotation = Quaternion.AngleAxis(c_result.x, character.up);
 
             transform.localRotation = Quaternion.AngleAxis(-result.y, Vector3.right);
             character.localRotation = Quaternion.AngleAxis(result.x, character.up);

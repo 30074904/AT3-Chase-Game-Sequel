@@ -29,6 +29,7 @@ public class movement : MonoBehaviour
     }
     void FixedUpdate()
     {
+        // checking if the player is grounded.
         if (C_c.isGrounded == true)
         {
             grounded = true;
@@ -37,7 +38,7 @@ public class movement : MonoBehaviour
         {
             grounded = false;
         }
-
+        // crouching the player and not letting them uncrouch if theres something above them.
         if (Input.GetKey("left ctrl"))
         {
             if (Physics.Raycast(transform.position, Vector3.up, out hit, 10f))
@@ -74,7 +75,7 @@ public class movement : MonoBehaviour
 
         dir = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
         dir = dir.normalized;
-
+        // slowing move speed if crouched.
         if (crouched == true)
         {
             C_c.Move(dir * specrouch * Time.deltaTime);
@@ -98,6 +99,10 @@ public class movement : MonoBehaviour
         {
             gravity = 7;
 
+        }
+        if (Input.GetButton("AButton") && (grounded == true))
+        {
+            gravity = 7;
         }
 
 

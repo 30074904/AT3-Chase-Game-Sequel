@@ -11,6 +11,9 @@ public class PutOnButton : MonoBehaviour
     public GameObject down;
     public GameObject left;
     public GameObject right;
+    public GameObject destination;
+    public GameObject depart;
+    public GameObject goingTo;
 
     private Image buttonImage;
 
@@ -36,6 +39,7 @@ public class PutOnButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // making a timer that starts when the button is first selected and switchs the color to white after a period of time
         if (timer > 0)
         {
             timer -= Time.deltaTime;
@@ -48,13 +52,14 @@ public class PutOnButton : MonoBehaviour
     }
     private void CompareButton(GameObject currSel)
     {
+        // checking if this is the current selection and if it is making it red and starting the timer, it also gives the menu navigator its variables.
         if (thisG != null)
         {
             if (currSel == thisG)
             {
-                buttonImage.color = Color.red;
+                buttonImage.color = Color.green;
                 timer = timeMax;
-                EventManager.updateCurrentDirections(up, down, left, right);
+                EventManager.updateCurrentDirections(up, down, left, right, destination, depart, goingTo);
             }
         }
         

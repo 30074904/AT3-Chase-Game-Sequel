@@ -11,12 +11,14 @@ public class ScriptSceneManager : MonoBehaviour
     int level = 1;
     void Start()
     {
+        //syncronising the change level event with the switch level methord
         EventManager.ChangeLevelEvent += SwitchLevel;
         SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 
     public void SwitchLevel(int currLevel)
     {
+        // switching the level to what the methord is called with
         if (currLevel == 1)
         {
             //start menu
@@ -40,6 +42,7 @@ public class ScriptSceneManager : MonoBehaviour
             
         }
     }
+    // used for the button click 
     public void ButtonSwitchLevel(int levelSend)
     {
         SwitchLevel(levelSend);

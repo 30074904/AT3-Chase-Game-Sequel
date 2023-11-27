@@ -15,12 +15,12 @@ public class KnightHurt : MonoBehaviour
     {
         
     }
+    // checking if the player has entered the knights trigger and if so triggering the lose state.
     void OnTriggerEnter(Collider collision)
     {
         Debug.Log("Entered a hitbox");
         if (collision.tag == "Player")
         {
-            Debug.Log("you lose");
             EventManager.ChangeLevelEvent(4);
         }
     }
