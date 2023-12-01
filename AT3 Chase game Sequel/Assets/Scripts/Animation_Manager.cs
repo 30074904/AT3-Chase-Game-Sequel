@@ -12,7 +12,7 @@ public class Animation_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponent<Animator>();
+        
         EventManager.updateAnimationHandsEvent += ChangeAnimationHands;
         EventManager.updateAnimationEvent += ChangeAnimation;
         EventManager.GarrageEvent += garrageOpen;
@@ -21,18 +21,25 @@ public class Animation_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!TryGetComponent<Animator>(out anim))
+        {
+            Debug.Log("no animator");
+        }
     }
     private void ChangeAnimation(int animNum)
     {
-        foreach (AnimatorControllerParameter param in anim.parameters)
+        if (anim != null)
         {
-            if (param.name == "CurrAnim")
+            foreach (AnimatorControllerParameter param in anim.parameters)
             {
-                anim.SetInteger("CurrAnim", animNum);
+                if (param.name == "CurrAnim")
+                {
+                    anim.SetInteger("CurrAnim", animNum);
+                }
+
             }
-            
         }
+        
             
         
     }

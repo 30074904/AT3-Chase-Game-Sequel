@@ -75,7 +75,17 @@ public class EnermyPatrol : MonoBehaviour
     void Update()
     {
         transformPlayer = player.transform.position - transform.position;
-        
+        if (chaseState == EnermyState.hunting)
+        {
+            if (Vector3.Distance(transform.position, wayPoints[currWayPoint].position) < agent.stoppingDistance)
+            {
+                chaseState = EnermyState.waiting;
+                EventManager.updateAnimationEvent(0);
+                angle = Vector3.Angle(transformPlayer, transform.forward);
+                GoToIdle(transformPlayer);
+            }
+        }
+
         if (Input.GetKey(KeyCode.Q))
         {
             agent.SetDestination(transform.position);
